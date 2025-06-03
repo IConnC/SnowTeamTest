@@ -1,0 +1,6 @@
+[submodule "matching/extern/json"]
+	path = matching/extern/json
+	url = https://github.com/nlohmann/json.git
+[submodule "matching/extern/opencv"]
+	path = matching/extern/opencv
+	url = https://github.com/opencv/opencv.git

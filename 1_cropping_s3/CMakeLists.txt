@@ -113,14 +113,14 @@ target_include_directories(snowflake_classifier PRIVATE ${PROJECT_SOURCE_DIR}/sr
                                            ${PROJECT_SOURCE_DIR}/libs/opencv_contrib/modules/cudafilters/include
                                            ${PROJECT_SOURCE_DIR}/libs/opencv_contrib/modules/cudawarping/include
                                            ${PROJECT_SOURCE_DIR}/libs/opencv/modules/photo/include
-                                           /usr/local/cuda/include)
-link_directories(snowflake_classifier /usr/local/cuda/lib64)
+                                           /usr/local/cuda-11.4/include)
+link_directories(snowflake_classifier /usr/local/cuda-11.4/lib64)
 target_link_libraries(snowflake_classifier PRIVATE opencv_world
                                                    stdc++fs
                                                    cusolver_static
                                                    cudart_static
                                                    culibos
-                                                   cusolver_lapack_static
+                                                   #cusolver_lapack_static
                                                    metis_static
                                                    cublas_static
                                                    cublasLt_static

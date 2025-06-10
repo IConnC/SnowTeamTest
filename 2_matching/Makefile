@@ -5,8 +5,8 @@
 # Outputs in $(BINDIR)/ and $(OJ)/
 
 SHELL      = /bin/sh
-BINDIR     = ../bin
-OJ         = ../obj
+BINDIR     = ./bin
+OJ         = ./obj
 
 CFLAGS     := $(shell pkg-config --cflags opencv4)
 LIBS       := $(shell pkg-config --libs opencv4)
@@ -42,14 +42,14 @@ $(OJ):
 $(BINDIR)/snowMatching: $(OJ)/main.o $(OJ)/utils.o $(OJ)/matchingCode.o $(OJ)/fundamentalMatrix.o
 	g++ -o $@ $(OJ)/*.o $(LIBS) $(CFLAGS) -Wl,-rpath=/home/nvidia/SnowTeam/opencv/build/lib
 
-$(OJ)/main.o: main.cc $(OJ)/utils.o $(OJ)/matchingCode.o $(OJ)/fundamentalMatrix.o
-	g++ $(CXXFLAGS) $(CFLAGS) -c main.cc -o $@
+$(OJ)/main.o: src/main.cc $(OJ)/utils.o $(OJ)/matchingCode.o $(OJ)/fundamentalMatrix.o
+	g++ $(CXXFLAGS) $(CFLAGS) -c src/main.cc -o $@
 
-$(OJ)/matchingCode.o: matchingCode.cc matchingCode.h $(OJ)/utils.o
-	g++ $(CXXFLAGS) $(CFLAGS) -c matchingCode.cc -o $@
+$(OJ)/matchingCode.o: src/matchingCode.cc src/matchingCode.h $(OJ)/utils.o
+	g++ $(CXXFLAGS) $(CFLAGS) -c src/matchingCode.cc -o $@
 
-$(OJ)/fundamentalMatrix.o: fundamentalMatrix.cc fundamentalMatrix.h $(OJ)/utils.o
-	g++ $(CXXFLAGS) $(CFLAGS) -c fundamentalMatrix.cc -o $@
+$(OJ)/fundamentalMatrix.o: src/fundamentalMatrix.cc src/fundamentalMatrix.h $(OJ)/utils.o
+	g++ $(CXXFLAGS) $(CFLAGS) -c src/fundamentalMatrix.cc -o $@
 
-$(OJ)/utils.o: utils.cc utils.h
-	g++ $(CXXFLAGS) $(CFLAGS) -c utils.cc -o $@
+$(OJ)/utils.o: src/utils.cc src/utils.h
+	g++ $(CXXFLAGS) $(CFLAGS) -c src/utils.cc -o $@

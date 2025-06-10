@@ -7,11 +7,12 @@
 SHELL      = /bin/sh
 BINDIR     = ./bin
 OJ         = ./obj
+JSON_LIB   = ./libs/json/include
 
 CFLAGS     := $(shell pkg-config --cflags opencv4)
 LIBS       := $(shell pkg-config --libs opencv4)
 
-CXXFLAGS   = -g -Wall -std=c++17 -I/home/nvidia/SnowTeam/json/include
+CXXFLAGS   = -g -Wall -std=c++17 -I$(JSON_LIB)
 
 %: %.cpp
 	g++ $(CFLAGS) $(LIBS) -o $@ $<
@@ -22,7 +23,7 @@ obj: $(OJ)/main.o
 run: compile
 	# $(BINDIR)/snowMatching --TESTOP
 
-compile: $(OJ) $(BINDIR) $(BINDIR)/snowMatching
+compile: submodule $(OJ) $(BINDIR) $(BINDIR)/snowMatching
 
 mkdirs: $(OJ) $(BINDIR)
 
@@ -32,6 +33,11 @@ clean:
 clobber:
 	rm -f $(OJ)/*
 	rm -f $(BINDIR)/snowMatching
+
+# Ensure submodule is initialized and present
+submodule:
+	mkdir -p libs
+	git submodule update --init --recursive
 
 $(BINDIR):
 	mkdir -p $(BINDIR)

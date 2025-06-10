@@ -4,15 +4,15 @@
 # [submodule "matching/extern/opencv"]
 # 	path = matching/extern/opencv
 # 	url = https://github.com/opencv/opencv.git
-# [submodule "libs/opencv"]
-# 	path = 1_cropping_s3/libs/opencv
-# 	url = https://github.com/opencv/opencv
-# [submodule "libs/opencv_contrib"]
-# 	path = 1_cropping_s3/libs/opencv_contrib
-# 	url = https://github.com/opencv/opencv_contrib
 [submodule "1_cropping_s3/libs/opencv"]
 	path = 1_cropping_s3/libs/opencv
 	url = https://github.com/opencv/opencv
 [submodule "1_cropping_s3/libs/opencv_contrib"]
 	path = 1_cropping_s3/libs/opencv_contrib
 	url = https://github.com/opencv/opencv_contrib
+[submodule "2_matching/libs/-h"]
+	path = 2_matching/libs/-h
+	url = https://github.com/nlohmann/json
+[submodule "2_matching/libs/json"]
+	path = 2_matching/libs/json
+	url = https://github.com/nlohmann/json

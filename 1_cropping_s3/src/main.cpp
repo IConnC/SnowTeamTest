@@ -209,8 +209,6 @@ static void runStandalonePipeline(const std::string& input_path, const std::stri
 		if (fs::is_directory(filepath)) {
 			continue;
 		}
-
-		if (filepath.filename().string().rfind("2024", 0) != 0) continue; // Temp for 2024 processing
 		
 		paths.emplace_back(filepath);
 	}

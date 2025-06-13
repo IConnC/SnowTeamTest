@@ -164,3 +164,11 @@ const std::vector<cv::Mat>& crop_filter::get_oversize_images() {
 const std::vector<std::pair<u32, u32>>& crop_filter::get_oversize_coords() {
 	return m_oversize_coords;
 }
+
+u32 crop_filter::get_width() const {
+	return m_width;
+}
+
+u32 crop_filter::get_height() const {
+	return m_height;
+}

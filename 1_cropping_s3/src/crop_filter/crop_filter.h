@@ -80,6 +80,10 @@ public:
 	
 	// returns a vector containing the cropped image coords over 300 pixels in some dimension
 	const std::vector<std::pair<u32, u32>>& get_oversize_coords();
+
+	u32 get_width() const;
+
+	u32 get_height() const;
 	
 private:
 	

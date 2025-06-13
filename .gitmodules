@@ -13,6 +13,6 @@
 [submodule "2_matching/libs/json"]
 	path = 2_matching/libs/json
 	url = https://github.com/nlohmann/json
-[submodule "libs/cppzmq"]
-	path = libs/cppzmq
-	url = https://github.com/zeromq/cppzmq.git
+#[submodule "libs/cppzmq"]
+#	path = orchestrator/libs/cppzmq
+#	url = https://github.com/zeromq/cppzmq.git

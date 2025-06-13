@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 2.8.12)
+cmake_minimum_required(VERSION 3.16.3)
 project(snowflake_classifier LANGUAGES CXX CUDA)
 
 # Require C++17, and disable compiler-specific extensions (if possible).

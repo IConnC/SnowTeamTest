@@ -1,3 +1,5 @@
+git submodule update --init --recursive
+
 cmake ./opencv \
   -B build \
   -DCMAKE_BUILD_TYPE=Release \
@@ -44,3 +46,5 @@ cmake ./opencv \
 cmake ./opencv -B build
 cmake --build build -j$(nproc)
 cmake --install build
+
+rm -rf opencv opencv_contrib

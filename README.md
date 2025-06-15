@@ -26,6 +26,10 @@ After the images are cropped, they are then sorted by geometric shape, riming de
 - Any other relavant files found while cleaning up the CPU server
 
 # Project Setup
+
+1. Clone the repository
+2. Initialize Submodules: `git submodule update --init --recursive`
+
 ## Build and install OpenCV
 These projects rely on an OpenCV build, their build process will fail if OpenCV is not built and installed properly since they are dynamically linked.
 

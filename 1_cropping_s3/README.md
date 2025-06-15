@@ -4,14 +4,17 @@ https://github.com/jtsawyerCSU/snowflake_classifier
 
 ### Requirements:
 - CMake
-- CUDA 11.8 (only 11.8 and 11.5 are confirmed working)
+- CUDA 11.4, 11.5, 11.8
 
 ### to compile:
+
+Ensure the OpenCV module is built as per the root README.md
+
 ```
 cd snowflake_classifier/build
 ```
 ```
-cmake -DCMAKE_CUDA_COMPILER="/usr/local/cuda-11.8/bin/nvcc" -DCUDA_GENERATION=Auto ..
+cmake -DCMAKE_CUDA_COMPILER="/usr/local/cuda-11.X/bin/nvcc" -DCUDA_GENERATION=Auto ..
 ```
 ```
 cmake --build .

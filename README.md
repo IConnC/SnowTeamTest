@@ -24,3 +24,11 @@ After the images are cropped, they are then sorted by geometric shape, riming de
 ## Future Changes
 - Add example images for each field campaign alongside the cropped images
 - Any other relavant files found while cleaning up the CPU server
+
+# Project Setup
+## Build and install OpenCV
+These projects rely on an OpenCV build, their build process will fail if OpenCV is not built and installed properly since they are dynamically linked.
+
+1. `cd opencv`
+2. Run `./build.sh`
+3. OpenCV should be built and installed to directory opencv-install

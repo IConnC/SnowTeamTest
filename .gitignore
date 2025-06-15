@@ -1,3 +1,5 @@
 .vscode/
 Old_Python_Code/
 py_cropping_s3/
+orchestrator/
+opencv-install/

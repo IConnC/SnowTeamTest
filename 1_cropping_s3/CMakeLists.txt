@@ -24,6 +24,7 @@ set(CMAKE_CUDA_FLAGS_RELEASE "-O3")
 set(CMAKE_CUDA_FLAGS_RELWITHDEBINFO "${CMAKE_CUDA_FLAGS_RELEASE} ${CMAKE_CUDA_FLAGS_DEBUG}")
 set(CMAKE_CUDA_ARCHITECTURES "87")
 
+
 find_package(Git QUIET)
 if(GIT_FOUND AND EXISTS "${PROJECT_SOURCE_DIR}/.git")
 # Update submodules as needed
@@ -115,13 +116,14 @@ target_include_directories(snowflake_classifier PRIVATE ${PROJECT_SOURCE_DIR}/sr
                                            ${PROJECT_SOURCE_DIR}/libs/opencv/modules/photo/include
                                            /usr/local/cuda-11.4/include)
 link_directories(snowflake_classifier /usr/local/cuda-11.4/lib64)
+
 target_link_libraries(snowflake_classifier PRIVATE opencv_world
                                                    stdc++fs
-                                                   cusolver_static
-                                                   cudart_static
-                                                   culibos
-                                                   #cusolver_lapack_static
+                                                    #  culibos -- Only needed for static cuda linking
                                                    metis_static
-                                                   cublas_static
-                                                   cublasLt_static
-                                                   cusparse_static)
+                                                   cusolver
+                                                   cudart
+                                                   cublas
+                                                   cublasLt
+                                                   cusparse
+                                                   )

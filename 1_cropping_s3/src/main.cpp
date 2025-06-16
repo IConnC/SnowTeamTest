@@ -116,6 +116,8 @@ static void processImage(const fs::path& filepath, std::unique_ptr<crop_filter>&
 	for (uint32_t i = 0; i < oversize_flakes.size(); ++i) {
 		saveImage(oversize_flakes[i], oversize_folder, filepath.stem(), snowflake_number + i, oversize_coords[i], 0);
 	}
+
+	image_gpu.release();
 }
 
 // Processes images saved on the filesystem rather than in memory
@@ -209,7 +211,8 @@ static void runStandalonePipeline(const std::string& input_path, const std::stri
 		if (fs::is_directory(filepath)) {
 			continue;
 		}
-		
+		// if (filepath.filename().string().rfind("2024", 0) != 0) continue; // Temp for 2024 processing
+
 		paths.emplace_back(filepath);
 	}
 	

@@ -7,12 +7,15 @@
 [submodule "2_matching/libs/json"]
 	path = 2_matching/libs/json
 	url = https://github.com/nlohmann/json
-#[submodule "libs/cppzmq"]
-#	path = orchestrator/libs/cppzmq
-#	url = https://github.com/zeromq/cppzmq.git
+[submodule "libs/cppzmq"]
+	path = orchestrator/libs/cppzmq
+	url = https://github.com/zeromq/cppzmq.git
 [submodule "opencv/opencv"]
 	path = opencv/opencv
 	url = https://github.com/opencv/opencv
 [submodule "opencv/opencv_contrib"]
 	path = opencv/opencv_contrib
 	url = https://github.com/opencv/opencv_contrib
+[submodule "orchestrator/libs/cppzmq"]
+	path = orchestrator/libs/cppzmq
+	url = https://github.com/zeromq/cppzmq.git

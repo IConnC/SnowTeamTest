@@ -69,7 +69,8 @@ static void processImage(const fs::path& filepath, std::unique_ptr<crop_filter>&
 	}
 	
 	// create crop_filter instance if it doesn't exist yet or if it doesn't match image_gpu size
-	if ((crop_filter_instance == nullptr) || (crop_filter_instance->get_width() != (u32) image_gpu.cols) || (crop_filter_instance->get_height() != (u32) image_gpu.rows)) {
+	// if ((crop_filter_instance == nullptr) || (crop_filter_instance->get_width() != (u32) image_gpu.cols) || (crop_filter_instance->get_height() != (u32) image_gpu.rows)) {
+	if (crop_filter_instance == nullptr) {
 		crop_filter_instance = std::make_unique<crop_filter>(image_gpu.cols, image_gpu.rows);
 		// disable spectreal sharpness calculation
 		crop_filter_instance->enable_spectral(false);
@@ -117,7 +118,7 @@ static void processImage(const fs::path& filepath, std::unique_ptr<crop_filter>&
 		saveImage(oversize_flakes[i], oversize_folder, filepath.stem(), snowflake_number + i, oversize_coords[i], 0);
 	}
 
-	image_gpu.release();
+	// image_gpu.release();
 }
 
 // Processes images saved on the filesystem rather than in memory
@@ -130,15 +131,17 @@ static void runBatchPipeline(const std::string& input_path, const std::string& o
 	// 											 "cam_2",
 	// 											 "cam_3",
 	// 											 "cam_4"};
-	std::vector<const char*> camera_name_list = {"CAM0",
-												 "CAM1",
-												 "CAM2",
-												 "CAM3",
-												 "CAM4",
-												 "CAM5",
-												 "CAM6"};
+	// std::vector<const char*> camera_name_list = {"CAM0",
+	// 											 "CAM1",
+	// 											 "CAM2",
+	// 											 "CAM3",
+	// 											 "CAM4",
+	// 											 "CAM5",
+	// 											 "CAM6"};
+
+	char camera_name_list[6] = {'1', '2', '3', '4', '5', '6'};
 	
-	for (std::string camera_name : camera_name_list) {
+	for (char camera_name : camera_name_list) {
 		
 		std::string usable_folder   = output_folder + "/usable_images";
 		std::string unusable_folder = output_folder + "/unusable_images";
@@ -150,10 +153,13 @@ static void runBatchPipeline(const std::string& input_path, const std::string& o
 		fs::create_directory(blurry_folder);
 		fs::create_directory(usable_folder);
 		
-		oversize_folder	+= "/" + camera_name;
-		blurry_folder	+= "/" + camera_name;
-		usable_folder	+= "/" + camera_name;
-		
+		// oversize_folder	+= "/" + camera_name;
+		// blurry_folder	+= "/" + camera_name;
+		// usable_folder	+= "/" + camera_name;
+		oversize_folder.append("/").push_back(camera_name);
+		blurry_folder.append("/").push_back(camera_name);
+		usable_folder.append("/").push_back(camera_name);
+
 		fs::create_directory(oversize_folder);
 		fs::create_directory(blurry_folder);
 		fs::create_directory(usable_folder);
@@ -162,17 +168,32 @@ static void runBatchPipeline(const std::string& input_path, const std::string& o
 		cv::Mat image;
 		std::unique_ptr<crop_filter> crop_filter_instance = nullptr;
 		
+		fs::path filepath;
+		std::string filename;
+
 		for (const fs::directory_entry& entry : fs::recursive_directory_iterator{input_path}) {
-			fs::path filepath = entry.path();
-			
+			filepath = entry.path();
+			filename = filepath.filename().string();
+
 			if (fs::is_directory(filepath)) {
 				continue;
 			}
 			
-			if (filepath.string().find(camera_name) == std::string::npos) { // BUG: If filepath contains multiple cameras, same input image will be processed multiple times. 
+			if (filename.rfind("2024", 0) != 0) continue; // Temp for 2024 processing
+			
+			if (filename.find(camera_name) == std::string::npos) { // BUG: If filepath contains multiple cameras, same input image will be processed multiple times. 
+				continue;
+			}
+
+			size_t camera_pos = filename.find(".");
+			if (camera_pos == std::string::npos || camera_pos < 2) {
 				continue;
 			}
 			
+			if (filename.at(camera_pos - 2) != camera_name) {
+				continue;
+			}
+
 			paths.emplace_back(filepath);
 		}
 		

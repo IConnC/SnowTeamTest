@@ -139,7 +139,7 @@ static void runBatchPipeline(const std::string& input_path, const std::string& o
 	// 											 "CAM5",
 	// 											 "CAM6"};
 
-	char camera_name_list[6] = {'1', '2', '3', '4', '5', '6'};
+	char camera_name_list[7] = {'0', '1', '2', '3', '4', '5', '6'};
 	
 	for (char camera_name : camera_name_list) {
 		
@@ -181,9 +181,9 @@ static void runBatchPipeline(const std::string& input_path, const std::string& o
 			
 			if (filename.rfind("2024", 0) != 0) continue; // Temp for 2024 processing
 			
-			if (filename.find(camera_name) == std::string::npos) { // BUG: If filepath contains multiple cameras, same input image will be processed multiple times. 
-				continue;
-			}
+			// if (filename.find(camera_name) == std::string::npos) { // BUG: If filepath contains multiple cameras, same input image will be processed multiple times. 
+			// 	continue;
+			// }
 
 			size_t camera_pos = filename.find(".");
 			if (camera_pos == std::string::npos || camera_pos < 2) {

@@ -269,6 +269,12 @@ int main(int argc, char** argv) {
 		std::exit(-1);
 	}
 
+	// -- TEMPORARY FOR PROCESSING --
+	if (cv::cuda::getCudaEnabledDeviceCount() > 1) {
+		cv::cuda::setDevice(1);
+	}
+	// -- TEMPORARY END --
+
 	fs::path input_path{input_folder};
 	
 	if (!fs::is_directory(input_path)) {

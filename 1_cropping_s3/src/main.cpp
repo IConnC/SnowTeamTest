@@ -27,9 +27,6 @@ Modes:
 
 	batch <input_folder> <output_folder>
 		Process images in input_folder and write results to output_folder.
-
-	standalone <input_folder> <output_folder>
-		Process images in input_folder and write results to out_folder without specific input file name formatting
 )";
 
 static void saveImage(const cv::Mat& img, 
@@ -209,46 +206,6 @@ static void runBatchPipeline(const std::string& input_path, const std::string& o
 	}
 }
 
-static void runStandalonePipeline(const std::string& input_path, const std::string& output_folder) {
-	fs::create_directory(output_folder);
-			
-	std::string usable_folder   = output_folder + "/usable_images";
-	std::string unusable_folder = output_folder + "/unusable_images";
-	std::string oversize_folder = output_folder + "/unusable_images/oversize_images";
-	std::string blurry_folder   = output_folder + "/unusable_images/blurry_images";
-		
-	fs::create_directory(unusable_folder);
-	fs::create_directory(oversize_folder);
-	fs::create_directory(blurry_folder);
-	fs::create_directory(usable_folder);
-						
-	std::vector<fs::path> paths;
-	cv::Mat image;
-	std::unique_ptr<crop_filter> crop_filter_instance = nullptr;
-	
-	for (const fs::directory_entry& entry : fs::recursive_directory_iterator{input_path}) {
-		fs::path filepath = entry.path();
-		
-		if (fs::is_directory(filepath)) {
-			continue;
-		}
-		// if (filepath.filename().string().rfind("2024", 0) != 0) continue; // Temp for 2024 processing
-
-		paths.emplace_back(filepath);
-	}
-	
-	// sort input images so background subtraction works
-	std::sort(paths.begin(), paths.end());
-	
-	// timer to test how long things take
-	timer t;
-	
-	for (const fs::path& filepath : paths) {
-		processImage(filepath, crop_filter_instance, image, t, usable_folder, blurry_folder, oversize_folder);
-	}
-
-}
-
 int main(int argc, char** argv) {
 	
 	// opencv likes to print a lot of warnings sometimes
@@ -287,8 +244,6 @@ int main(int argc, char** argv) {
 		return 1;
 	} else if (mode == "batch") {
 		runBatchPipeline(input_path, output_folder);
-	} else if (mode == "standalone") {
-		runStandalonePipeline(input_path, output_folder);
 	} else {
 		std::cout << CLI_HELP_STR;
 		return 1;
@@ -314,7 +269,7 @@ static void saveImage(const cv::Mat& img, const std::string& folder, std::string
 	// Concat 
 	std::string outPath = folder + "/" + fileStem + 'X' + std::to_string(cX) + 'Y' + std::to_string(cY) + "_S" + std::to_string(sharpness) + ".png";
 
-	std::cout << "Saving to " << outPath << '\n';
+	// std::cout << "Saving to " << outPath << '\n';
 	static std::vector<int> compression_params{cv::IMWRITE_PNG_COMPRESSION, 9};
 	cv::imwrite(outPath, img, compression_params);
 }

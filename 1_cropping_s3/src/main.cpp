@@ -34,7 +34,7 @@ Modes:
 
 static void saveImage(const cv::Mat& img, 
 					  const std::string& folder, 
-					  const std::string& stem, 
+					  std::string fileStem, 
 					  int num, 
 					  const std::pair<int, int>& c, 
 					  float sharpness);

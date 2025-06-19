@@ -297,21 +297,23 @@ int main(int argc, char** argv) {
 	return 0;
 }
 
-static void saveImage(const cv::Mat& img, const std::string& folder, const std::string& stem, int num, const std::pair<int, int>& c, float sharpness) {
+static void saveImage(const cv::Mat& img, const std::string& folder, std::string fileStem, int num, const std::pair<int, int>& c, float sharpness) {
 	int cY = c.first;
 	int cX = c.second;
-	std::string outFilename = stem + 'X' + std::to_string(cX) + 'Y' + std::to_string(cY) + "_S" + std::to_string(sharpness) + ".png";
-	std::string x = std::to_string(num);
 
 	// Place cropped number between brackets in filename (01 02 03 ... 09 10 11 12 13 ...)
-	std::string croppedNum = std::to_string(num);
-	if (num < 10) croppedNum.insert(0, "0");
+	std::string croppedNum;
+	if (num < 10) croppedNum.append("0");
+	croppedNum.append(std::to_string(num));
 
-	int beginBracket = stem.rfind("[");
-	int endBracket = stem.rfind("]");
-	outFilename = outFilename.substr(0, beginBracket + 1) + croppedNum + outFilename.substr(endBracket);
+	int beginBracket = fileStem.find("[");
+	int endBracket = fileStem.find("]");
 
-	std::string outPath = folder + "/" + outFilename;
+	fileStem = fileStem.substr(0, beginBracket + 1) + croppedNum + fileStem.substr(endBracket);
+
+	// Concat 
+	std::string outPath = folder + "/" + fileStem + 'X' + std::to_string(cX) + 'Y' + std::to_string(cY) + "_S" + std::to_string(sharpness) + ".png";
+
 	std::cout << "Saving to " << outPath << '\n';
 	static std::vector<int> compression_params{cv::IMWRITE_PNG_COMPRESSION, 9};
 	cv::imwrite(outPath, img, compression_params);

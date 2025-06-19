@@ -22,10 +22,10 @@ namespace fs = std::experimental::filesystem;
 
 static const std::string CLI_HELP_STR = R"(Usage: ./snowflake_classifier <mode> [arguments...]
 Modes:
-	daemon <input_folder> <output_folder>
+	daemon <input_folder> bind_address
 		Run continuously and process new images (TODO).
 
-	batch <input_folder> <output_folder>
+	batch <input_folder> <output_folder> [masc|smas]
 		Process images in input_folder and write results to output_folder.
 )";
 
@@ -119,27 +119,18 @@ static void processImage(const fs::path& filepath, std::unique_ptr<crop_filter>&
 }
 
 // Processes images saved on the filesystem rather than in memory
-static void runBatchPipeline(const std::string& input_path, const std::string& output_folder) {
+// If isSMAS is true then run SMAS processing, else run MASC
+static void runBatchPipeline(const std::string& input_path, const std::string& output_folder, bool isSMAS) {
 	fs::create_directory(output_folder);
 
-	// for the SMAS, replace cam_x with CAMx_1
-	// std::vector<const char*> camera_name_list = {"cam_0",
-	// 											 "cam_1",
-	// 											 "cam_2",
-	// 											 "cam_3",
-	// 											 "cam_4"};
-	// std::vector<const char*> camera_name_list = {"CAM0",
-	// 											 "CAM1",
-	// 											 "CAM2",
-	// 											 "CAM3",
-	// 											 "CAM4",
-	// 											 "CAM5",
-	// 											 "CAM6"};
-
+	// Process for SMAS or MASC Cameras
+	int num_cameras = isSMAS ? 7 : 3;
 	char camera_name_list[7] = {'0', '1', '2', '3', '4', '5', '6'};
-	
-	for (char camera_name : camera_name_list) {
-		
+
+	char camera_name;
+	for (int camIndex = 0; camIndex < num_cameras; camIndex++) {
+		camera_name = camera_name_list[camIndex];
+
 		std::string usable_folder   = output_folder + "/usable_images";
 		std::string unusable_folder = output_folder + "/unusable_images";
 		std::string oversize_folder = output_folder + "/unusable_images/oversize_images";
@@ -150,9 +141,6 @@ static void runBatchPipeline(const std::string& input_path, const std::string& o
 		fs::create_directory(blurry_folder);
 		fs::create_directory(usable_folder);
 		
-		// oversize_folder	+= "/" + camera_name;
-		// blurry_folder	+= "/" + camera_name;
-		// usable_folder	+= "/" + camera_name;
 		oversize_folder.append("/").push_back(camera_name);
 		blurry_folder.append("/").push_back(camera_name);
 		usable_folder.append("/").push_back(camera_name);
@@ -177,10 +165,6 @@ static void runBatchPipeline(const std::string& input_path, const std::string& o
 			}
 			
 			if (filename.rfind("2024", 0) != 0) continue; // Temp for 2024 processing
-			
-			// if (filename.find(camera_name) == std::string::npos) { // BUG: If filepath contains multiple cameras, same input image will be processed multiple times. 
-			// 	continue;
-			// }
 
 			size_t camera_pos = filename.find(".");
 			if (camera_pos == std::string::npos || camera_pos < 2) {
@@ -203,15 +187,22 @@ static void runBatchPipeline(const std::string& input_path, const std::string& o
 		for (const fs::path& filepath : paths) {
 			processImage(filepath, crop_filter_instance, image, t, usable_folder, blurry_folder, oversize_folder);
 		}
+
+		crop_filter_instance.reset(); // Reset after every camera, some cameras have different resolutions
 	}
 }
+
+static void testPipeline(const std::string& input_path, const std::string& output_folder) {
+
+}
+
 
 int main(int argc, char** argv) {
 	
 	// opencv likes to print a lot of warnings sometimes
 	cv::utils::logging::setLogLevel(cv::utils::logging::LogLevel::LOG_LEVEL_SILENT);
 	
-	if (argc != 4) {
+	if (argc < 4) {
 		std::cout << "Unable to parse arguments!\n";
 		std::cout << CLI_HELP_STR;
 		std::exit(-1);
@@ -243,7 +234,22 @@ int main(int argc, char** argv) {
 		std::cout << "Not Implemented!\n";
 		return 1;
 	} else if (mode == "batch") {
-		runBatchPipeline(input_path, output_folder);
+		if (argc < 5) {
+			std::cout << CLI_HELP_STR;
+			return 1;
+		}
+		std::string smas_string = argv[4];
+		bool isSMAS;
+		if (smas_string == "smas") isSMAS = true;
+		else if (smas_string == "masc") isSMAS = false;
+		else {
+			std::cout << CLI_HELP_STR;
+			return 1;
+		}
+
+		runBatchPipeline(input_path, output_folder, isSMAS);
+	} else if (mode == "test") {
+		testPipeline(input_path, output_folder);
 	} else {
 		std::cout << CLI_HELP_STR;
 		return 1;

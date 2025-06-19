@@ -1,4 +1,5 @@
 build/
 .vscode/
 oldbuilds.tar.gz
-test/
+smas_test/
+masc_test/
